@@ -55,7 +55,7 @@ streamer = Thread(target=videoStreamer)
 streamer.start()
 
 tello.takeoff()
-# time.sleep(5)
+
 while True:
     lr, fb, ud, yaw, isEsc = getVelocityFromKeyboard()
     if not isEsc:
