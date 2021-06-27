@@ -6,7 +6,44 @@
 #  and the script exit.
 
 from djitellopy import Tello
+from threading import Thread
+from lib.keyboardModule import checkKey
+from pynput import keyboard
 import cv2, math, time
+
+LINEAR_SPEED = 50
+YAW_SPEED = 25
+DATA_STREAM = True
+
+def videoStreamer():
+    while DATA_STREAM:
+        img = frame_read.frame
+        draw = cv2.resize(img, (320,192))
+        cv2.imshow("drone", draw)
+        cv2.waitKey(1)
+    cv2.destroyAllWindows()
+
+def getVelocityFromKeyboard():
+    lr, fb, ud, yaw, isEsc = 0, 0, 0, 0, False
+    
+    _key = checkKey()
+
+    if _key == 'a': lr = -LINEAR_SPEED
+    elif _key == 'd': lr = LINEAR_SPEED
+
+    if _key == 'w': fb = LINEAR_SPEED
+    elif _key == 's': fb = -LINEAR_SPEED
+
+    if _key == 'r': ud = LINEAR_SPEED
+    elif _key == 'f': ud = -LINEAR_SPEED
+
+    if _key == 'q': yaw = -YAW_SPEED
+    elif _key == 'e': yaw = YAW_SPEED
+
+    if _key == keyboard.Key.esc: isEsc = True
+
+    return lr, fb, ud, yaw, isEsc
+    
 
 tello = Tello()
 tello.connect()
@@ -14,32 +51,20 @@ tello.connect()
 tello.streamon()
 frame_read = tello.get_frame_read()
 
+streamer = Thread(target=videoStreamer)
+streamer.start()
+
 tello.takeoff()
-
+# time.sleep(5)
 while True:
-    # In reality you want to display frames in a seperate thread. Otherwise
-    #  they will freeze while the drone moves.
-    img = frame_read.frame
-    cv2.imshow("drone", img)
-
-    key = cv2.waitKey(1) & 0xff
-    if key == 27: # ESC
+    lr, fb, ud, yaw, isEsc = getVelocityFromKeyboard()
+    if not isEsc:
+        tello.send_rc_control(lr, fb, ud, yaw)
+        print(getVelocityFromKeyboard())
+    else:
         break
-    elif key == ord('w'):
-        tello.move_forward(20)  # cm
-    elif key == ord('s'):
-        tello.move_back(20)     # cm
-    elif key == ord('a'):
-        tello.move_left(20)     # cm
-    elif key == ord('d'):
-        tello.move_right(20)    # cm
-    elif key == ord('e'):
-        tello.rotate_clockwise(20)  # degree
-    elif key == ord('q'):
-        tello.rotate_counter_clockwise(20)  #degree
-    elif key == ord('r'):
-        tello.move_up(20 )      # cm
-    elif key == ord('f'):
-        tello.move_down(20)     # cm
+    time.sleep(1/5)
 
 tello.land()
+DATA_STREAM = False
+streamer.join()

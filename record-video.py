@@ -14,6 +14,7 @@ def videoRecorder():
     # create a VideoWrite object, recoring to ./video.avi
     height, width, _ = frame_read.frame.shape
     video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (width, height))
+    # video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (640, 480))
 
     while keepRecording:
         video.write(frame_read.frame)
@@ -30,14 +31,14 @@ print('Tello battery percentage: {}'.format(tello.get_battery()))
 tello.takeoff()
 # tello.move_left(20)
 # tello.rotate_counter_clockwise(360)
-time.sleep(5)
+time.sleep(3)
 
 start = time.time()
-while time.time() - start < 3: #second
+while time.time() - start < 10: #second
     tello.send_rc_control(left_right_velocity=0,
                         forward_backward_velocity=0,
-                        up_down_velocity=2,
-                        yaw_velocity=20)
+                        up_down_velocity=0,
+                        yaw_velocity=30)
 
     # tello.curve_xyz_speed(x1=100, y1=100, z1=100,
     #                       x2=200, y2=200, z2=200,

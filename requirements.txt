@@ -2,3 +2,5 @@ djitellopy
 numpy
 opencv-python
 pygame
+keyboard
+pynput
