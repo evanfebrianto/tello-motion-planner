@@ -2,3 +2,4 @@ djitellopy
 numpy
 opencv-python
 pygame
+mediapipe
