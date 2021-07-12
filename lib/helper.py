@@ -94,3 +94,7 @@ def parse_config(filename='../config.ini'):
       elif section_name == 'BOOLEAN':
         parsed[section_name][option] = bool(int(config[section_name][option]))
   return parsed
+
+def calculateDistance(x1, y1, x2, y2):
+    dist = math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
+    return dist
