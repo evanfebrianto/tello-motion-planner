@@ -36,7 +36,7 @@ def findFace(img):
         min_tracking_confidence=0.5) as hands:
         with mp_face_detection.FaceDetection(
                 model_selection=1, 
-                min_detection_confidence=0.8) as face_detection:
+                min_detection_confidence=0.7) as face_detection:
             # Flip the image horizontally for a later selfie-view display, and convert
             # the BGR image to RGB.
             img = cv2.cvtColor(cv2.flip(img, 1), cv2.COLOR_BGR2RGB)
@@ -114,7 +114,7 @@ def trackFace(myDrone,info,w,h,pid,pidA,pErrorX,pErrorY,pErrorA,last_errorX,last
         error_x = 0
         error_y = 0
         error_A = 0
-    if info[2] < 20.0:
+    if info[2] < 40.0:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
         myDrone.up_down_velocity = 0
