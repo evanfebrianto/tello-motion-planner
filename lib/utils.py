@@ -87,7 +87,11 @@ def trackFace(myDrone,info,w,h,pid,pidA,pErrorX,pErrorY,pErrorA,last_errorX,last
     ## PID
     error_x = info[0][0] - w//2
     error_y = info[0][1] - h//2
-    error_A = info[1] - 1800
+    if w==640:
+        areaThreshold = 6400
+    else:
+        areaThreshold = 1800
+    error_A = info[1] - areaThreshold
     d_errorX = error_x - last_errorX
     d_errorY = error_y - last_errorY
     d_errorA = error_A - last_errorA
