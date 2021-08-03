@@ -15,7 +15,7 @@ def videoStreamer():
     while DATA_STREAM:
         img = frame_read.frame
         draw = img.copy()
-        draw = cv2.resize(draw, (320,192))
+        draw = cv2.resize(draw, (1280,720))
         cv2.imshow("drone", draw)
         cv2.waitKey(1)
     cv2.destroyAllWindows()
